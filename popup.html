@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindShield Pro</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-light: #f8fafc;
+            --card-light: rgba(255, 255, 255, 0.95);
+            --card-dark: rgba(30, 41, 59, 0.95);
+            --text-light: #1e293b;
+            --text-dark: #f1f5f9;
+            --border-light: rgba(0, 0, 0, 0.08);
+            --border-dark: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 340px;
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text-light);
+        }
+
+        body.dark {
+            --card: var(--card-dark);
+            --text: var(--text-dark);
+            --border: var(--border-dark);
+        }
+
+        body.light {
+            --card: var(--card-light);
+            --text: var(--text-light);
+            --border: var(--border-light);
+        }
+
+        .container {
+            padding: 12px;
+        }
+
+        .card {
+            background: var(--card, var(--card-light));
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid var(--border, var(--border-light));
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        /* Compact Header */
+        .header {
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border, var(--border-light));
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .logo-text h1 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text, var(--text-light));
+        }
+
+        .logo-text span {
+            font-size: 10px;
+            color: #64748b;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--danger);
+        }
+
+        .status-dot.online {
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+        }
+
+        .theme-btn {
+            background: rgba(100, 116, 139, 0.1);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Compact Stats Row */
+        .stats-row {
+            display: flex;
+            padding: 12px 16px;
+            gap: 12px;
+            border-bottom: 1px solid var(--border, var(--border-light));
+        }
+
+        .stat {
+            flex: 1;
+            text-align: center;
+            padding: 10px 8px;
+            background: rgba(99, 102, 241, 0.08);
+            border-radius: 10px;
+        }
+
+        .stat-num {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        /* Collapsible Sections */
+        .section {
+            border-bottom: 1px solid var(--border, var(--border-light));
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .section-header:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text, var(--text-light));
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-toggle {
+            font-size: 12px;
+            color: #94a3b8;
+            transition: transform 0.2s;
+        }
+
+        .section.collapsed .section-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .section.collapsed .section-content {
+            display: none;
+        }
+
+        .section-content {
+            padding: 0 16px 12px;
+        }
+
+        /* Compact Toggle Row */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            color: var(--text, var(--text-light));
+        }
+
+        .switch {
+            position: relative;
+            width: 42px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #cbd5e1;
+            border-radius: 24px;
+            transition: 0.3s;
+        }
+
+        .slider:before {
+            content: "";
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        input:checked+.slider {
+            background: var(--primary);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(18px);
+        }
+
+        /* Compact Input */
+        .input-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .input-row input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border, var(--border-light));
+            border-radius: 8px;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .input-row input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Compact Buttons */
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(100, 116, 139, 0.1);
+            color: #64748b;
+        }
+
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 11px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-row .btn {
+            flex: 1;
+        }
+
+        /* Whitelist Compact */
+        .whitelist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .whitelist-count {
+            font-size: 11px;
+            color: #64748b;
+            background: rgba(100, 116, 139, 0.1);
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+
+        .whitelist-list {
+            max-height: 80px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+            padding: 6px;
+        }
+
+        .whitelist-empty {
+            padding: 12px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        .whitelist-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 8px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+
+        .whitelist-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .whitelist-remove {
+            background: rgba(239, 68, 68, 0.1);
+            border: none;
+            color: #ef4444;
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .whitelist-remove:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        /* Info Footer */
+        .footer {
+            padding: 10px 16px;
+            background: rgba(99, 102, 241, 0.05);
+            font-size: 10px;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%) translateY(60px);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0;
+            transition: 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: rgba(16, 185, 129, 0.95);
+            color: white;
+        }
+
+        .toast.error {
+            background: rgba(239, 68, 68, 0.95);
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="light">
+    <div class="container">
+        <div class="card">
+            <!-- Header -->
+            <div class="header">
+                <div class="logo">
+                    <div class="logo-icon">🛡️</div>
+                    <div class="logo-text">
+                        <h1>MindShield</h1>
+                        <span>PRO v3.0</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <div class="status-dot" id="statusDot" title="Checking..."></div>
+                    <button class="theme-btn" id="themeToggle">🌙</button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat">
+                    <div class="stat-num" id="scansToday">0</div>
+                    <div class="stat-label">SCANS</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num" id="blockedToday">0</div>
+                    <div class="stat-label">BLOCKED</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num" id="whitelistCount">0</div>
+                    <div class="stat-label">WHITELIST</div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="section" id="settingsSection">
+                <div class="section-header">
+                    <span class="section-title">⚙️ Settings</span>
+                    <span class="section-toggle">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="toggle-row">
+                        <span class="toggle-label">Protection</span>
+                        <label class="switch">
+                            <input type="checkbox" id="enabledToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-row">
+                        <span class="toggle-label">Show Reason</span>
+                        <label class="switch">
+                            <input type="checkbox" id="warningToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="input-row">
+                        <input type="text" id="modelInput" placeholder="AI Model (e.g., gpt-oss:120b-cloud)">
+                        <button class="btn btn-primary btn-sm" id="saveBtn">Save</button>
+                    </div>
+                    <div class="btn-row">
+                        <button class="btn btn-secondary btn-sm" id="clearCacheBtn">🗑️ Clear Cache</button>
+                        <button class="btn btn-secondary btn-sm" id="testConnectionBtn">🔌 Test</button>
+                        <button class="btn btn-secondary btn-sm" id="viewStatsBtn">📊 Stats</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Whitelist Section -->
+            <div class="section" id="whitelistSection">
+                <div class="section-header">
+                    <span class="section-title">📋 Whitelist</span>
+                    <span class="section-toggle">▼</span>
+                </div>
+                <div class="section-content">
+                    <div id="whitelistContainer">
+                        <div class="whitelist-list" id="whitelistList">
+                            <div class="whitelist-empty" id="whitelistEmpty">No whitelisted sites</div>
+                        </div>
+                    </div>
+                    <div class="input-row" style="margin-top: 8px;">
+                        <input type="text" id="addWhitelistInput" placeholder="example.com">
+                        <button class="btn btn-primary btn-sm" id="addWhitelistBtn">+ Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <span>🤖 AI-powered protection</span>
+                <a href="#" id="viewAuditLog">View audit log →</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <script src="popup.js"></script>
+</body>
+
+</html>

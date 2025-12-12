@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Blocked - MindShield Pro</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Shield Animation */
+        .shield-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 30px;
+        }
+
+        .shield {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            box-shadow:
+                0 20px 60px rgba(239, 68, 68, 0.4),
+                0 0 0 8px rgba(239, 68, 68, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .shield::before {
+            content: '';
+            position: absolute;
+            inset: -15px;
+            border: 3px solid rgba(239, 68, 68, 0.3);
+            border-radius: inherit;
+            animation: ripple 2s ease-out infinite;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        /* Content Card */
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #fff 0%, #e2e8f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 24px;
+        }
+
+        /* Reason Box */
+        .reason-box {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .reason-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .reason-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Confidence Meter */
+        .confidence-container {
+            margin: 20px 0;
+        }
+
+        .confidence-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+        }
+
+        .confidence-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--warning) 0%, var(--danger) 100%);
+            border-radius: 4px;
+            transition: width 1s ease-out;
+        }
+
+        .confidence-value {
+            font-size: 14px;
+            color: var(--warning);
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        /* URL Box */
+        .url-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            word-break: break-all;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Info Section */
+        .info-section {
+            margin-top: 30px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .info-list {
+            list-style: none;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .info-list li {
+            padding: 6px 0;
+        }
+
+        .info-list a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .info-list a:hover {
+            text-decoration: underline;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            padding: 14px 28px;
+            background: rgba(16, 185, 129, 0.95);
+            color: white;
+            border-radius: 12px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Appeal Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1e1b4b;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 450px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modal h3 {
+            margin-bottom: 16px;
+        }
+
+        .modal textarea {
+            width: 100%;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            color: white;
+            font-size: 14px;
+            resize: none;
+            margin-bottom: 16px;
+        }
+
+        .modal textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-buttons .btn {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="shield-container">
+            <div class="shield">🛡️</div>
+        </div>
+
+        <div class="card">
+            <h1>Content Blocked</h1>
+            <p class="subtitle">This page has been blocked by MindShield Pro</p>
+
+            <div class="reason-box">
+                <div class="reason-header">
+                    ⚠️ <span id="reasonText">Potential adult content detected</span>
+                </div>
+            </div>
+
+            <div class="confidence-container">
+                <div class="confidence-label">AI Confidence Level</div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" id="confidenceBar" style="width: 0%"></div>
+                </div>
+                <div class="confidence-value" id="confidenceValue">--</div>
+            </div>
+
+            <div class="url-box" id="blockedUrl">Loading...</div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" id="goBackBtn">← Go Back</button>
+                <button class="btn btn-outline" id="goHomeBtn">🏠 Home</button>
+                <button class="btn btn-success" id="appealBtn">✋ Request Review</button>
+            </div>
+
+            <div class="info-section">
+                <div class="info-title">Think this is a mistake?</div>
+                <ul class="info-list">
+                    <li>• Click "Request Review" to add this site to your whitelist</li>
+                    <li>• Your feedback helps improve our AI accuracy</li>
+                    <li>• <a href="#" id="viewStatsLink">View your protection statistics →</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appeal Modal -->
+    <div class="modal" id="appealModal">
+        <div class="modal-content">
+            <h3>🔍 Request Review</h3>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 16px; font-size: 14px;">
+                Tell us why you think this page was incorrectly blocked (optional):
+            </p>
+            <textarea id="appealReason"
+                placeholder="e.g., This is an educational website about health topics..."></textarea>
+            <div class="modal-buttons">
+                <button class="btn btn-outline" id="cancelAppeal">Cancel</button>
+                <button class="btn btn-success" id="submitAppeal">✓ Whitelist & Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script src="blocked.js"></script>
+</body>
+
+</html>
