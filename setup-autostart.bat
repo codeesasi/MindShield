@@ -20,6 +20,27 @@ if %errorlevel% neq 0 (
 echo Creating Scheduled Task...
 echo.
 
+:: CLEANUP LEGACY STARTUP ITEMS
+:: Remove old startup shortcut if it exists
+if exist "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\ContentBlockerServices.lnk" (
+    echo Removing legacy startup shortcut...
+    del "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\ContentBlockerServices.lnk"
+)
+
+:: Remove old vbs script if it exists
+if exist "%~dp0start-hidden.vbs" (
+    echo Removing legacy vbs script...
+    del "%~dp0start-hidden.vbs"
+)
+
+:: Remove legacy task if it exists (hidden vs non-hidden versions)
+schtasks /query /tn "ContentBlockerServices" >nul 2>&1
+if %errorlevel%==0 (
+    echo Removing legacy scheduled task...
+    schtasks /delete /tn "ContentBlockerServices" /f >nul 2>&1
+)
+echo.
+
 :: Create a scheduled task to run start-services.bat at logon
 :: /tn : Task Name
 :: /tr : Task Run (Path to batch file)
