@@ -16,14 +16,14 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo.
-echo [2/4] Starting MongoDB...
-start "MongoDB" cmd /k "mongod --dbpath=C:\data\db"
-timeout /t 3 /nobreak > nul
+:: echo.
+:: echo [2/4] Starting MongoDB...
+:: start "MongoDB" cmd /k "mongod --dbpath=C:\data\db"
+:: timeout /t 3 /nobreak > nul
 
-echo [3/4] Starting Ollama...
-start "Ollama" cmd /k "ollama serve"
-timeout /t 3 /nobreak > nul
+:: echo [3/4] Starting Ollama...
+:: start "Ollama" cmd /k "ollama serve"
+:: timeout /t 3 /nobreak > nul
 
 echo [4/4] Starting Backend Server with PM2...
 
@@ -59,8 +59,6 @@ echo ========================================
 echo  All services started successfully!
 echo ========================================
 echo.
-echo  MongoDB:  http://localhost:27017
-echo  Ollama:   http://localhost:11434
 echo  Backend:  http://localhost:3001 (PM2)
 echo.
 echo PM2 Commands:
