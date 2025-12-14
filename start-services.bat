@@ -67,5 +67,5 @@ echo  - Stop server:  pm2 stop content-blocker
 echo  - Restart:      pm2 restart content-blocker
 echo  - Status:       pm2 status
 echo.
-echo Press any key to close this window...
+echo Press any key to close this window..
 pause > nul
