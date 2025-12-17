@@ -48,8 +48,11 @@ cd /d "%~dp0server"
 call pm2 stop content-blocker 2>nul
 call pm2 delete content-blocker 2>nul
 
+:: Wait a moment for cleanup
+timeout /t 2 /nobreak > nul
+
 :: Start server with PM2
-call pm2 start index.js --name content-blocker --watch --max-memory-restart 200M
+call pm2 start index.js --name content-blocker --watch --max-memory-restart 500M
 
 :: Save PM2 process list
 call pm2 save
