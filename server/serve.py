@@ -6,7 +6,7 @@ from langchain_core.prompts import ChatPromptTemplate
 # Configure LangSmith for logging
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
-os.environ["LANGCHAIN_API_KEY"] = "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"  # Replace with your actual API key
+os.environ["LANGCHAIN_API_KEY"] = ""  # Replace with your actual API key
 
 # Initialize Ollama chat model
 llm = ChatOllama(
