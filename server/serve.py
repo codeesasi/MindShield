@@ -9,7 +9,8 @@ import time,uvicorn
 from datetime import datetime, timedelta
 from typing import List, Optional
 from urllib.parse import urlparse
-
+from collections import defaultdict
+from time import time as current_time
 from fastapi import FastAPI, HTTPException, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -38,9 +39,6 @@ db = None
 START_TIME = time.time()
 
 # In-memory rate limiting
-from collections import defaultdict
-from time import time as current_time
-
 rate_limit_store = defaultdict(list)
 RATE_LIMIT_WINDOW = 60  # 1 minute
 RATE_LIMIT_MAX = 100  # 100 requests per minute
@@ -142,7 +140,13 @@ class HealthResponse(BaseModel):
     uptime: float
     version: str
 
+class WebContext(BaseModel):
+    context: str
+    modelName: str
 
+class aiResponse(BaseModel):
+    result: str
+    
 # ==================== UTILITY FUNCTIONS ====================
 
 def is_valid_url(url: str) -> bool:
@@ -527,7 +531,14 @@ async def health_check():
         print(f"Error in health check: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
+# ==================== Call Ollama =============
 
+@app.get("/api/llmcall")
+async def validateContent():
+    """
+    Call AI model and check content is valid or not
+    """
+    ...
 # ==================== ERROR HANDLERS ====================
 
 @app.exception_handler(404)
@@ -546,7 +557,6 @@ async def internal_error_handler(request: Request, exc):
         status_code=500,
         content={"error": "Internal server error"}
     )
-
 
 # ==================== MAIN ====================
 
