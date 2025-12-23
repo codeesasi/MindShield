@@ -1,2 +1,5 @@
 langchain-ollama
 ollama
+fastapi 
+uvicorn 
+pydantic 
