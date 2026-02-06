@@ -12,7 +12,7 @@ const API_CONFIG = {
 };
 
 const TIMEOUTS = {
-    API_REQUEST: 15000,
+    API_REQUEST: 60000, // 60 seconds (1 minute) - increased for cloud models
     CACHE_EXPIRY: 24 * 60 * 60 * 1000
 };
 

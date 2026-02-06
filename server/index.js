@@ -219,8 +219,8 @@ app.post('/api/cache', async (req, res) => {
                 result,
                 reason: sanitize(reason, 200),
                 confidence: Math.min(1, Math.max(0, parseFloat(confidence) || 0.5)),
-                scannedAt: new Date(),
-                expiresAt: new Date(Date.now() + 3600000) // 1 hour
+                scannedAt: new Date()
+                // expiresAt removed - cache stored permanently
             },
             { new: true, upsert: true }
         );

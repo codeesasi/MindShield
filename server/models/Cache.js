@@ -6,10 +6,10 @@ const cacheSchema = new mongoose.Schema({
     result: { type: String, enum: ['allow', 'block'], required: true },
     reason: { type: String, default: '' },
     scannedAt: { type: Date, default: Date.now },
-    expiresAt: { type: Date, default: () => new Date(Date.now() + 3600000) } // 1 hour
+    expiresAt: { type: Date } // Optional - no auto-expiration
 }, { timestamps: true });
 
-// TTL index to auto-delete expired entries
-cacheSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+// TTL index removed - cache will be stored permanently
+// To manually clean old entries, you can run: db.caches.deleteMany({ scannedAt: { $lt: new Date(Date.now() - 30*24*60*60*1000) } })
 
 module.exports = mongoose.model('Cache', cacheSchema);

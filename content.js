@@ -48,40 +48,48 @@
     }
 
     /**
-     * Check if current page is sensitive (login, payment, etc.)
+     * Check if current page is sensitive (authentication only)
+     * Regular forms (contact, survey, etc.) are allowed
      * @returns {boolean}
      */
     function isSensitivePage() {
         try {
-            // Check for password fields
-            if (document.querySelector('input[type="password"]')) {
-                console.log('[CB Pro] Sensitive page detected: password field');
-                return true;
-            }
+            // Check for password fields (indicates login/signup)
+            const hasPasswordField = document.querySelector('input[type="password"]');
 
-            // Check URL patterns
-            const sensitivePatterns = [
-                /login/i, /signin/i, /sign-in/i,
-                /checkout/i, /payment/i, /billing/i,
-                /account/i, /password/i, /auth/i
+            // Check URL patterns for authentication
+            const authPatterns = [
+                /login/i, /signin/i, /sign-in/i, /log-in/i,
+                /signup/i, /register/i, /registration/i,
+                /auth/i, /authenticate/i,
+                /password/i, /reset-password/i, /forgot-password/i
             ];
 
-            if (sensitivePatterns.some(p => p.test(window.location.href))) {
-                console.log('[CB Pro] Sensitive page detected: URL pattern');
+            const hasAuthURL = authPatterns.some(p => p.test(window.location.href));
+
+            // Only skip if BOTH conditions are met (password field AND auth URL)
+            // This allows contact forms, surveys, etc. to be scanned
+            if (hasPasswordField && hasAuthURL) {
+                console.log('[CB Pro] Sensitive page detected: Authentication page');
                 return true;
             }
 
-            // Check for payment forms
+            // Check for payment forms (optional - can be disabled)
             const paymentSelectors = [
                 'input[autocomplete="cc-number"]',
                 'input[autocomplete="cc-exp"]',
                 'input[autocomplete="cc-csc"]',
-                'input[name*="card"]',
-                'input[name*="cvv"]'
+                'input[name*="cardnumber"]',
+                'input[id*="cardnumber"]'
             ];
 
-            if (paymentSelectors.some(sel => document.querySelector(sel))) {
-                console.log('[CB Pro] Sensitive page detected: payment form');
+            // Only skip checkout/billing pages with payment fields
+            const checkoutPatterns = [/checkout/i, /payment/i, /billing/i];
+            const hasCheckoutURL = checkoutPatterns.some(p => p.test(window.location.href));
+            const hasPaymentFields = paymentSelectors.some(sel => document.querySelector(sel));
+
+            if (hasPaymentFields && hasCheckoutURL) {
+                console.log('[CB Pro] Sensitive page detected: Payment page');
                 return true;
             }
 
@@ -90,6 +98,7 @@
             return false;
         }
     }
+
 
     // ==================== EXTENSION COMMUNICATION ====================
 
