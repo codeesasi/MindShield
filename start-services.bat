@@ -47,12 +47,17 @@ cd /d "%~dp0server"
 :: Stop existing instance if running
 call pm2 stop content-blocker 2>nul
 call pm2 delete content-blocker 2>nul
+call pm2 delete youtube-downloader 2>null
 
 :: Wait a moment for cleanup
 timeout /t 2 /nobreak > nul
 
 :: Start server with PM2
 call pm2 start index.js --name content-blocker --watch --max-memory-restart 500M
+
+:: Start py script 
+call pm2 start D:/AutoScript/Youtue_playlist_audio_downloader.py --name youtube-downloader --interpreter python --cwd D:/AutoScript --cron-restart "*/5 * * * *" --no-autorestart
+
 
 :: Save PM2 process list
 call pm2 save
