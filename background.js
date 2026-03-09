@@ -92,6 +92,23 @@ function extractDomain(url) {
 }
 
 /**
+ * Checks whether a domain matches an allowlisted domain exactly or as a subdomain.
+ * Prevents partial-string bypasses (e.g. "notexample.com" matching "example.com").
+ * @param {string} domain - Domain extracted from current URL
+ * @param {string} allowlistedDomain - Stored whitelist domain
+ * @returns {boolean}
+ */
+function isWhitelistedDomainMatch(domain, allowlistedDomain) {
+    if (!domain || !allowlistedDomain) return false;
+
+    const normalizedDomain = domain.toLowerCase();
+    const normalizedAllowlisted = allowlistedDomain.toLowerCase();
+
+    return normalizedDomain === normalizedAllowlisted ||
+        normalizedDomain.endsWith(`.${normalizedAllowlisted}`);
+}
+
+/**
  * Check if rate limit allows request
  * @returns {boolean}
  */
@@ -349,7 +366,7 @@ async function handleContentCheck(request, sender) {
 
     // Check whitelist
     const domain = extractDomain(url);
-    if (settings.whitelist?.some(w => domain.includes(w))) {
+    if (settings.whitelist?.some(w => isWhitelistedDomainMatch(domain, w))) {
         console.log(`Whitelisted: ${domain}`);
         return { action: 'allow', reason: 'Whitelisted domain' };
     }
